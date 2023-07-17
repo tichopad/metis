@@ -6,12 +6,16 @@
       "dependsOn": ["^build"]
     },
     "lint": {
-      "dependsOn": ["format"],
-      "inputs": ["**/*.{js,jsx,ts,tsx}"],
+      "dependsOn": ["format", "check"],
+      "inputs": ["**/*.{js,svelte,ts}"],
       "outputs": [".eslintcache"]
     },
     "format": {
-      "inputs": ["**/*.{js,jsx,ts,tsx}", "**/*.{json,md,yml,yaml}"]
+      "inputs": ["**/*.{js,json,md,svelte,ts,yml,yaml}"]
+    },
+    "check": {
+      "dependsOn": ["^check"],
+      "inputs": ["**/*.{js,json,html,svelte,ts}"]
     },
     "dev": {
       "cache": false,

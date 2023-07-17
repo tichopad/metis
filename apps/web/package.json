@@ -1,29 +1,38 @@
 {
-  "name": "@tpm/web",
-  "private": true,
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "format": "prettier --write --cache .",
-    "lint": "eslint --fix --cache --ext ts,tsx src"
-  },
-  "eslintConfig": {
-    "extends": "@tpm/eslint-config"
-  },
-  "dependencies": {
-    "@tpm/utils": "workspace:*",
-    "react": "17.0.1",
-    "react-dom": "17.0.1"
-  },
-  "devDependencies": {
-    "@tpm/eslint-config": "workspace:*",
-    "@tpm/tsconfig": "workspace:*",
-    "@types/react": "~17.0.21",
-    "@types/react-dom": "^17.0.10",
-    "@vitejs/plugin-react": "2.0.1",
-    "typescript": "5.0.3",
-    "vite": "3.0.9"
-  }
+	"name": "@metis/web",
+	"version": "1.0.0",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"test": "vitest run",
+		"lint": "eslint --fix --cache .",
+		"format": "prettier --cache --plugin-search-dir . --write ."
+	},
+	"devDependencies": {
+		"@metis/eslint-config": "workspace:*",
+		"@sveltejs/adapter-auto": "2.1.0",
+		"@sveltejs/kit": "1.22.3",
+		"eslint": "8.45.0",
+		"prettier-plugin-svelte": "2.10.1",
+		"svelte": "4.0.5",
+		"svelte-check": "3.4.6",
+		"tslib": "2.6.0",
+		"typescript": "5.1.6",
+		"vite": "4.4.4",
+		"vitest": "0.33.0"
+	},
+	"eslintConfig": {
+		"extends": "@metis/eslint-config/svelte",
+		"ignorePatterns": [
+			"node_modules",
+			"/build",
+			"/.svelte-kit",
+			"package"
+		]
+	}
 }

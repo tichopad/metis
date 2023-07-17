@@ -2,29 +2,24 @@ const path = require('path')
 
 /** @type {import("eslint/lib/shared/types").ConfigData} */
 module.exports = {
-  env: {
-    browser: true,
-    es2021: true,
-    node: true,
-  },
+  root: true,
   extends: [
-    'airbnb-base',
-    'airbnb-typescript/base',
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
   parserOptions: {
     ecmaVersion: 'latest',
     project: [
       '{apps,packages}/*/tsconfig.json',
-      '{apps,packages}/*/tsconfig.{eslint,node}.json',
+      '{apps,packages}/*/tsconfig.node.json',
     ],
     sourceType: 'module',
     tsconfigRootDir: path.resolve(__dirname, '../..'),
   },
-  plugins: ['@typescript-eslint'],
   rules: {
     '@typescript-eslint/consistent-type-imports': [
       'error',
@@ -45,22 +40,4 @@ module.exports = {
       },
     ],
   },
-  overrides: [
-    {
-      // React
-      files: '**/*.tsx',
-      extends: [
-        'airbnb',
-        'airbnb-typescript',
-        'airbnb/hooks',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:@typescript-eslint/recommended-requiring-type-checking',
-        'prettier',
-      ],
-      rules: {
-        // Using automatic JSX transform
-        'react/react-in-jsx-scope': 'off',
-      },
-    },
-  ],
 }

@@ -1,7 +1,0 @@
-{
-  "extends": "@tpm/tsconfig/node",
-  "include": ["src"],
-  "compilerOptions": {
-    "outDir": "dist"
-  }
-}
