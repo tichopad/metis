@@ -1,0 +1,20 @@
+{
+  "name": "@tpm/monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "comments": {
+    "turbo-filter-template": "Exclude the template package from pipeline runs"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build --filter=!@tpm/template --output-logs=new-only",
+    "lint": "turbo run lint --filter=!@tpm/template --output-logs=new-only"
+  },
+  "devDependencies": {
+    "esbuild": "0.17.15",
+    "eslint": "8.37.0",
+    "prettier": "2.8.7",
+    "turbo": "1.10.8",
+    "typescript": "5.0.3"
+  }
+}

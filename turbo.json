@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": [".env", ".prettierrc.js", "tsconfig.json"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"]
+    },
+    "lint": {
+      "dependsOn": ["format"],
+      "inputs": ["**/*.{js,jsx,ts,tsx}"],
+      "outputs": [".eslintcache"]
+    },
+    "format": {
+      "inputs": ["**/*.{js,jsx,ts,tsx}", "**/*.{json,md,yml,yaml}"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
