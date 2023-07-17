@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build --output-logs=new-only",
-    "lint": "turbo run lint --output-logs=new-only"
+    "lint": "turbo run lint --output-logs=new-only",
+    "test": "turbo run test --output-logs=new-only"
   },
   "devDependencies": {
     "prettier": "3.0.0",
