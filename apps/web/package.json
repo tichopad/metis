@@ -34,5 +34,14 @@
 			"/.svelte-kit",
 			"package"
 		]
+	},
+	"dependencies": {
+		"@spectrum-css/button": "10.1.11",
+		"@spectrum-css/icon": "3.0.50",
+		"@spectrum-css/page": "5.0.31",
+		"@spectrum-css/tokens": "11.0.2",
+		"@spectrum-css/typography": "5.0.29",
+		"@spectrum-css/vars": "9.0.8",
+		"langchain": "0.0.119"
 	}
 }
