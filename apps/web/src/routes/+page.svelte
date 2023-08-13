@@ -1,33 +1,32 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import Button from '$lib/components/Button.svelte';
+	import Textfield from '$lib/components/Textfield.svelte';
+
 	export let form;
 
-	const content = form;
+	let formElement: HTMLFormElement;
 </script>
 
-<form class="prompt-input" method="POST">
-	<div class="prompt-input__textfield spectrum-Textfield spectrum-Textfield--multiline">
-		<textarea name="prompt" class="spectrum-Textfield-input" />
+<form bind:this={formElement} class="prompt" method="POST" use:enhance>
+	<div class="textfield">
+		<Textfield name="prompt" on:submit={() => formElement.requestSubmit()} />
 	</div>
-	<button
-		type="submit"
-		class="prompt-input__button spectrum-Button spectrum-Button--fill spectrum-Button--primary spectrum-Button--sizeL"
-	>
-		<span class="spectrum-Button-label">Send</span>
-	</button>
+	<Button primary label="Send" type="submit" />
 </form>
 
 <main>
-	{#if !content?.length}
+	{#if !form?.length}
 		<p>Nothing here yet.</p>
 	{:else}
-		{#each content as line}
+		{#each form as line}
 			<p>{line}</p>
 		{/each}
 	{/if}
 </main>
 
 <style>
-	.prompt-input {
+	.prompt {
 		width: 100%;
 		height: 100px;
 		position: absolute;
@@ -43,7 +42,7 @@
 			var(--spectrum-alias-background-color-default) 65%
 		);
 
-		& .prompt-input__textfield {
+		& .textfield {
 			width: 80%;
 		}
 	}
