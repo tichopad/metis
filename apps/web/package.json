@@ -42,6 +42,9 @@
 		"@spectrum-css/tokens": "11.0.2",
 		"@spectrum-css/typography": "5.0.29",
 		"@spectrum-css/vars": "9.0.8",
-		"langchain": "0.0.119"
+		"langchain": "0.0.119",
+		"openai": "^3.3.0",
+		"pino": "8.15.0",
+		"pino-pretty": "10.2.0"
 	}
 }

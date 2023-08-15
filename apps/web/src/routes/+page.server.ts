@@ -1,13 +1,31 @@
 import type { Actions } from './$types';
-import { VITE_OPENAI_API_KEY } from '$env/static/private';
+import { getChatCompletion } from '$lib/prompt';
+import type { ChatCompletionRequestMessage } from 'openai';
+import type { Load } from '@sveltejs/kit';
+
+const messages: ChatCompletionRequestMessage[] = [];
+
+export const load: Load = async () => {
+	return { messages };
+};
 
 export const actions: Actions = {
-	default: async (event) => {
-		console.log({ VITE_OPENAI_API_KEY });
-		return [
-			'Lorem ipsum dolor sit amet.',
-			'Consectetur adipiscing elit.',
-			'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-		];
+	prompt: async (event) => {
+		const formData = await event.request.formData();
+		const prompt = formData.get('prompt') as string;
+
+		if (prompt === undefined) {
+			return messages;
+		}
+
+		messages.push({ role: 'user', content: prompt });
+
+		const response = await getChatCompletion(messages);
+
+		if (response !== undefined) {
+			messages.push(response);
+		}
+
+		return messages;
 	}
 };
