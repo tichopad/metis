@@ -3,7 +3,7 @@
 </script>
 
 <div class="wrapper spectrum-Textfield spectrum-Textfield--multiline">
-	<textarea {name} class="spectrum-Textfield-input" />
+	<textarea class="spectrum-Textfield-input" {name} on:keydown />
 </div>
 
 <style>

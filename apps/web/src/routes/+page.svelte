@@ -1,12 +1,36 @@
 <script lang="ts">
-	export let data;
-
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
 	import Textfield from '$lib/components/Textfield.svelte';
+	import type { EventHandler } from '$lib/type-helpers.js';
+	import type { SubmitFunction } from '@sveltejs/kit';
+
+	export let data;
 
 	let formElement: HTMLFormElement;
 	let isLoadingNewMessage = false;
+
+	$: console.log('Messages', data.messages);
+
+	// Handle client-side form enhancement (loading state, optimistic update)
+	const enhanceForm: SubmitFunction = ({ formData }) => {
+		// TODO: Validate form data
+		const promptMessage = String(formData.get('prompt'));
+		formElement.reset();
+		data.messages = [...data.messages, { role: 'user', content: promptMessage }];
+		isLoadingNewMessage = true;
+		return async ({ update }) => {
+			await update();
+			isLoadingNewMessage = false;
+		};
+	};
+
+	// Submit on Ctrl+Enter when focused inside the form
+	const submitFormOnCtrlEnter: EventHandler<KeyboardEvent> = (event) => {
+		if (event.key === 'Enter' && event.ctrlKey) {
+			formElement.requestSubmit();
+		}
+	};
 </script>
 
 <main>
@@ -26,31 +50,12 @@
 	class="prompt-form"
 	method="POST"
 	bind:this={formElement}
-	use:enhance={() => {
-		return async ({ update, formData }) => {
-			const promptMessage = String(formData.get('prompt'));
-			data.messages = [...data.messages, { role: 'user', content: promptMessage }];
-			isLoadingNewMessage = true;
-			await update({ reset: true });
-			isLoadingNewMessage = false;
-		};
-	}}
+	use:enhance={enhanceForm}
 >
-	<div
-		class="inner"
-		role="presentation"
-		on:keydown={(event) => {
-			// Submit form on Ctrl+Enter
-			if (event.key === 'Enter' && event.ctrlKey) {
-				formElement.requestSubmit();
-			}
-		}}
-	>
-		<div class="textfield">
-			<Textfield name="prompt" />
-		</div>
-		<Button primary label="Send" type="submit" />
+	<div class="textfield">
+		<Textfield name="prompt" on:keydown={submitFormOnCtrlEnter} />
 	</div>
+	<Button primary label="Send" type="submit" />
 </form>
 
 <style>
@@ -60,19 +65,16 @@
 		position: absolute;
 		bottom: 0;
 		left: 0;
-		background: linear-gradient(
-			to bottom,
-			transparent,
-			var(--spectrum-alias-background-color-default) 65%
-		);
-	}
-
-	.inner {
 		width: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		gap: 30px;
+		background: linear-gradient(
+			to bottom,
+			transparent,
+			var(--spectrum-alias-background-color-default) 65%
+		);
 	}
 
 	.textfield {
