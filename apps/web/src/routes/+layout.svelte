@@ -1,17 +1,20 @@
 <script>
-	const conversations = [
-		{ name: 'Conversation 1', link: '/g/1/c/1' },
-		{ name: 'Conversation 2', link: '/g/2/c/1' },
-		{ name: 'Conversation 3', link: '/g/3/c/1' }
-	];
+	export let data;
 </script>
 
 <div class="layout-wrapper">
 	<nav class="sidebar">
-		<h3>Conversations</h3>
-		<ul>
-			{#each conversations as conversation}
-				<li><a href={conversation.link}>{conversation.name}</a></li>
+		<h2><a href="/">Home</a></h2>
+		<ul class="list list--groups">
+			{#each data.groups as group (group.id)}
+				<li><a href={`/group/${group.id}`}>{group.name}</a></li>
+				<ul class="list list--conversations">
+					{#each group.conversations as conversation (conversation.id)}
+						<li>
+							<a href={`/group/${group.id}/conversation/${conversation.id}`}>{conversation.name}</a>
+						</li>
+					{/each}
+				</ul>
 			{/each}
 		</ul>
 	</nav>
@@ -50,17 +53,27 @@
 		& h3 {
 			margin-top: 0;
 		}
+	}
 
-		& ul {
-			list-style: none;
-			margin: 0;
-			padding: 0;
-		}
+	.list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
 
 		& li {
 			margin-bottom: 10px;
 			white-space: nowrap;
 			text-overflow: ellipsis;
 		}
+	}
+
+	.list--groups {
+		& li {
+			font-weight: bold;
+		}
+	}
+
+	.list--conversations {
+		margin-left: 2rem;
 	}
 </style>

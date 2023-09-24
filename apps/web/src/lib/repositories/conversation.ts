@@ -1,3 +1,4 @@
+import logger from '$lib/logger.server';
 import type { ChatCompletionRequestMessage } from 'openai';
 
 type ID = string;
@@ -6,49 +7,49 @@ type Conversation = {
 	name: string;
 	messages: ChatCompletionRequestMessage[];
 };
-
-const db = new Map<ID, Conversation>();
-
-/**
- * Get a conversation by ID.
- */
-export async function getConversation(id: ID): Promise<Conversation | undefined> {
-	return db.get(id);
-}
+type Database = Map<ID, Conversation>;
 
 type PartialConversationWithoutId = Partial<Omit<Conversation, 'id'>>;
-/**
- * Update a conversation.
- *
- * @throws If the conversation does not exist.
- * @returns The updated conversation.
- */
-export async function updateConversation(
-	id: ID,
-	conversation: PartialConversationWithoutId
-): Promise<Conversation> {
-	const existingConversation = await getConversation(id);
 
-	if (existingConversation === undefined) {
-		throw new Error(`Conversation ${id} not found`);
+export default class ConversationRepository {
+	constructor(private readonly database: Database) {}
+
+	async get(id: ID): Promise<Conversation | undefined> {
+		logger.info(`Getting conversation ${id}`);
+		return this.database.get(id);
 	}
 
-	const updatedConversation = { ...existingConversation, ...conversation };
+	async update(id: ID, conversation: PartialConversationWithoutId): Promise<Conversation> {
+		logger.info(`Updating conversation ${id}`);
 
-	db.set(id, updatedConversation);
+		const existingConversation = await this.get(id);
+		if (existingConversation === undefined) {
+			throw new Error(`Conversation ${id} not found`);
+		}
 
-	return updatedConversation;
-}
+		const updatedConversation = { ...existingConversation, ...conversation };
+		this.database.set(id, updatedConversation);
 
-/**
- * Inserts a new messages at the end of the conversation.
- */
-export async function putMessage(id: ID, message: ChatCompletionRequestMessage): Promise<void> {
-	const conversation = await getConversation(id);
-
-	if (conversation === undefined) {
-		throw new Error(`Conversation ${id} not found`);
+		return updatedConversation;
 	}
 
-	conversation.messages.push(message);
+	async put(conversation: Conversation): Promise<Conversation> {
+		logger.info(`Putting conversation ${conversation.id}`);
+		this.database.set(conversation.id, conversation);
+		return conversation;
+	}
+
+	async putMessage(id: ID, message: ChatCompletionRequestMessage): Promise<Conversation> {
+		logger.info(`Putting message in conversation ${id}`);
+
+		const conversation = await this.get(id);
+		if (conversation === undefined) {
+			throw new Error(`Conversation ${id} not found`);
+		}
+
+		conversation.messages.push(message);
+		this.update(id, conversation);
+
+		return conversation;
+	}
 }

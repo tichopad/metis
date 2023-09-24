@@ -1,10 +1,10 @@
 import { OPENAI_API_KEY, OPENAI_ORG } from '$env/static/private';
 import logger from '$lib/logger.server';
-import {
+import type {
 	Configuration,
 	OpenAIApi,
-	type ChatCompletionRequestMessage,
-	type ChatCompletionResponseMessage
+	ChatCompletionRequestMessage,
+	ChatCompletionResponseMessage
 } from 'openai';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

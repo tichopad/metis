@@ -4,11 +4,14 @@
 	import Textfield from '$lib/components/Textfield.svelte';
 	import type { EventHandler } from '$lib/type-helpers.js';
 	import type { SubmitFunction } from '@sveltejs/kit';
+	import { page } from '$app/stores';
 
 	export let data;
 
 	let formElement: HTMLFormElement;
 	let isLoadingNewMessage = false;
+
+	$: console.log('Page', $page);
 
 	$: console.log('Messages', data.messages);
 
@@ -34,6 +37,7 @@
 </script>
 
 <main>
+	<h1>Group {$page.params.groupId} Conversation {$page.params.conversationId}</h1>
 	{#if !data?.messages.length}
 		<p>Ask something.</p>
 	{:else}
