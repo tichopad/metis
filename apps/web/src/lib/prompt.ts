@@ -1,10 +1,10 @@
 import { OPENAI_API_KEY, OPENAI_ORG } from '$env/static/private';
 import logger from '$lib/logger.server';
-import type {
+import {
 	Configuration,
 	OpenAIApi,
-	ChatCompletionRequestMessage,
-	ChatCompletionResponseMessage
+	type ChatCompletionRequestMessage,
+	type ChatCompletionResponseMessage
 } from 'openai';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -15,25 +15,25 @@ export async function getChatCompletion(
 	logger.trace('Started getChatCompletion');
 	logger.debug(messages, 'getChatCompletion input messages');
 
-	await delay(2000);
+	// await delay(2000);
 
-	return { role: 'assistant', content: 'Lorem ipsum dolor sit amet consectetuer alipiscit elit.' };
+	// return { role: 'assistant', content: 'Lorem ipsum dolor sit amet consectetuer alipiscit elit.' };
 
-	// const configuration = new Configuration({
-	// 	organization: OPENAI_ORG,
-	// 	apiKey: OPENAI_API_KEY
-	// });
-	// const openai = new OpenAIApi(configuration);
+	const configuration = new Configuration({
+		organization: OPENAI_ORG,
+		apiKey: OPENAI_API_KEY
+	});
+	const openai = new OpenAIApi(configuration);
 
-	// logger.trace('Created OpenAI API instance. Sending request for chat completion.');
+	logger.trace('Created OpenAI API instance. Sending request for chat completion.');
 
-	// const response = await openai.createChatCompletion({
-	// 	model: 'gpt-3.5-turbo',
-	// 	messages
-	// });
+	const response = await openai.createChatCompletion({
+		model: 'gpt-3.5-turbo',
+		messages
+	});
 
-	// logger.trace('Got chat completion response');
-	// logger.debug(response.data, 'Chat completion response data');
+	logger.trace('Got chat completion response');
+	logger.debug(response.data, 'Chat completion response data');
 
-	// return response.data.choices[0].message;
+	return response.data.choices[0].message;
 }

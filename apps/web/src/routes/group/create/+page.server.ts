@@ -2,8 +2,6 @@ import logger from '$lib/logger.server';
 import groupRepository from '$lib/repositories/group';
 import type { Actions } from './$types';
 
-const db = new Map();
-
 export const actions: Actions = {
 	default: async (event) => {
 		logger.debug(`Creating group`);
@@ -18,13 +16,7 @@ export const actions: Actions = {
 			id: Math.random().toString(36).substring(7),
 			name,
 			systemPrompt,
-			conversations: [
-				{
-					id: Math.random().toString(36).substring(7),
-					name: 'Conversation ABC',
-					messages: []
-				}
-			]
+			conversations: []
 		});
 
 		logger.info(`Created group ${group.id}`);

@@ -1,55 +1,49 @@
 import type { Actions } from './$types';
 import { getChatCompletion } from '$lib/prompt';
-import type { Load } from '@sveltejs/kit';
-import ConversationRepository from '$lib/repositories/conversation';
+import { error, type Load } from '@sveltejs/kit';
+import groupRepository from '$lib/repositories/group';
 
 const db = new Map();
 
 export const load: Load = async ({ params }) => {
-	const conversations = new ConversationRepository(db);
+	if (!params.conversationId) throw error(404, `Conversation ID is undefined`);
+	if (!params.groupId) throw error(404, `Group ID is undefined`);
 
-	if (!params.conversationId) {
-		throw new Error('Conversation ID is required');
-	}
+	const conversation = await groupRepository.getConversation(params.groupId, params.conversationId);
+	const group = await groupRepository.get(params.groupId);
 
-	const conversation = await conversations.get(params.conversationId);
-
-	if (!conversation) {
-		await conversations.put({
-			id: params.conversationId,
-			name: 'Conversation',
-			messages: []
-		});
-	}
-
-	return {
-		messages: conversation?.messages ?? []
-	};
+	return { conversation, group };
 };
 
 export const actions: Actions = {
-	prompt: async (event) => {
-		const formData = await event.request.formData();
+	prompt: async ({ request, params }) => {
+		const formData = await request.formData();
 		const prompt = formData.get('prompt') as string;
 
-		const conversations = new ConversationRepository(db);
-		const conversation = await conversations.get(event.params.conversationId);
-		const messages = conversation?.messages ?? [];
+		const conversation = await groupRepository.getConversation(
+			params.groupId,
+			params.conversationId
+		);
 
 		if (prompt === undefined) {
-			return messages;
+			return conversation.messages;
 		}
 
-		messages.push({ role: 'user', content: prompt });
+		const group = await groupRepository.get(params.groupId);
 
-		const response = await getChatCompletion(messages);
+		conversation.messages.push({ role: 'user', content: prompt });
+
+		const response = await getChatCompletion([
+			{ role: 'system', content: group.systemPrompt },
+			...conversation.messages
+		]);
 
 		if (response !== undefined) {
-			messages.push(response);
+			conversation.messages.push(response);
 		}
 
-		await conversations.update(event.params.conversationId, { messages });
+		await groupRepository.updateConversation(params.groupId, params.conversationId, conversation);
 
-		return messages;
+		return conversation.messages;
 	}
 };
