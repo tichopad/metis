@@ -1,23 +1,17 @@
 import { OPENAI_API_KEY, OPENAI_ORG } from '$env/static/private';
 import logger from '$lib/server/logger';
-import {
-  Configuration,
-  OpenAIApi,
-  type ChatCompletionRequestMessage,
-  type ChatCompletionResponseMessage,
-} from 'openai';
+import OpenAI from 'openai';
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   organization: OPENAI_ORG,
   apiKey: OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function getChatCompletion(
-  messages: ChatCompletionRequestMessage[],
-): Promise<ChatCompletionResponseMessage | undefined> {
+  messages: OpenAI.Chat.Completions.ChatCompletionMessage[],
+): Promise<OpenAI.Chat.Completions.ChatCompletionMessage | undefined> {
   logger.trace('Started getChatCompletion');
   logger.debug(messages, 'getChatCompletion input messages');
 
@@ -27,13 +21,13 @@ export async function getChatCompletion(
 
   logger.trace('Created OpenAI API instance. Sending request for chat completion.');
 
-  const response = await openai.createChatCompletion({
+  const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     messages,
   });
 
   logger.trace('Got chat completion response');
-  logger.debug(response.data, 'Chat completion response data');
+  logger.debug(response, 'Chat completion response data');
 
-  return response.data.choices[0].message;
+  return response.choices[0].message;
 }

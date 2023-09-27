@@ -1,10 +1,10 @@
 import logger from '$lib/server/logger';
 import { error } from '@sveltejs/kit';
-import type { ChatCompletionResponseMessage } from 'openai';
+import type OpenAI from 'openai';
 
 type ID = string;
 
-type Message = ChatCompletionResponseMessage;
+type Message = OpenAI.Chat.Completions.ChatCompletionMessage;
 type Conversation = {
   id: ID;
   groupId: ID;
