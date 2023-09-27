@@ -36,10 +36,10 @@
     ]
   },
   "dependencies": {
-    "@libsql/kysely-libsql": "^0.3.0",
-    "kysely": "^0.26.3",
-    "openai": "^3.3.0",
-    "pino": "8.15.0",
+    "@libsql/kysely-libsql": "0.3.0",
+    "kysely": "0.26.3",
+    "openai": "4.10.0",
+    "pino": "8.15.1",
     "pino-pretty": "10.2.0"
   }
 }
