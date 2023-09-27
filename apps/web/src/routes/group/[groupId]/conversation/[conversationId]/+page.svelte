@@ -2,7 +2,6 @@
   import { enhance } from '$app/forms';
   import Button from '$lib/components/Button.svelte';
   import Textfield from '$lib/components/Textfield.svelte';
-  import type { EventHandler } from '$lib/type-helpers.js';
   import type { SubmitFunction } from '@sveltejs/kit';
 
   export let data;
@@ -29,7 +28,7 @@
   };
 
   // Submit on Ctrl+Enter when focused inside the form
-  const submitFormOnCtrlEnter: EventHandler<KeyboardEvent> = (event) => {
+  const submitFormOnCtrlEnter = (event: KeyboardEvent) => {
     if (event.key === 'Enter' && event.ctrlKey) {
       formElement.requestSubmit();
     }

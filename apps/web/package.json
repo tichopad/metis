@@ -36,13 +36,8 @@
     ]
   },
   "dependencies": {
-    "@spectrum-css/button": "10.1.11",
-    "@spectrum-css/icon": "3.0.50",
-    "@spectrum-css/page": "5.0.31",
-    "@spectrum-css/tokens": "11.0.2",
-    "@spectrum-css/typography": "5.0.29",
-    "@spectrum-css/vars": "9.0.8",
-    "langchain": "0.0.119",
+    "@libsql/kysely-libsql": "^0.3.0",
+    "kysely": "^0.26.3",
     "openai": "^3.3.0",
     "pino": "8.15.0",
     "pino-pretty": "10.2.0"
