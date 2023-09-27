@@ -1,50 +1,50 @@
 {
-	"name": "@metis/web",
-	"version": "1.0.0",
-	"type": "module",
-	"private": true,
-	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"test": "vitest run",
-		"lint": "eslint --fix --cache .",
-		"format": "prettier --cache --plugin-search-dir . --write ."
-	},
-	"devDependencies": {
-		"@metis/eslint-config": "workspace:*",
-		"@sveltejs/adapter-auto": "2.1.0",
-		"@sveltejs/kit": "1.22.3",
-		"eslint": "8.45.0",
-		"prettier-plugin-svelte": "2.10.1",
-		"svelte": "4.0.5",
-		"svelte-check": "3.4.6",
-		"tslib": "2.6.0",
-		"typescript": "5.1.6",
-		"vite": "4.4.4",
-		"vitest": "0.33.0"
-	},
-	"eslintConfig": {
-		"extends": "@metis/eslint-config/svelte",
-		"ignorePatterns": [
-			"node_modules",
-			"/build",
-			"/.svelte-kit",
-			"package"
-		]
-	},
-	"dependencies": {
-		"@spectrum-css/button": "10.1.11",
-		"@spectrum-css/icon": "3.0.50",
-		"@spectrum-css/page": "5.0.31",
-		"@spectrum-css/tokens": "11.0.2",
-		"@spectrum-css/typography": "5.0.29",
-		"@spectrum-css/vars": "9.0.8",
-		"langchain": "0.0.119",
-		"openai": "^3.3.0",
-		"pino": "8.15.0",
-		"pino-pretty": "10.2.0"
-	}
+  "name": "@metis/web",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "test": "vitest run",
+    "lint": "eslint --fix --cache .",
+    "format": "prettier --cache --plugin-search-dir . --write ."
+  },
+  "devDependencies": {
+    "@metis/eslint-config": "workspace:*",
+    "@sveltejs/adapter-auto": "2.1.0",
+    "@sveltejs/kit": "1.22.3",
+    "eslint": "8.45.0",
+    "prettier-plugin-svelte": "2.10.1",
+    "svelte": "4.0.5",
+    "svelte-check": "3.4.6",
+    "tslib": "2.6.0",
+    "typescript": "5.1.6",
+    "vite": "4.4.4",
+    "vitest": "0.33.0"
+  },
+  "eslintConfig": {
+    "extends": "@metis/eslint-config/svelte",
+    "ignorePatterns": [
+      "node_modules",
+      "/build",
+      "/.svelte-kit",
+      "package"
+    ]
+  },
+  "dependencies": {
+    "@spectrum-css/button": "10.1.11",
+    "@spectrum-css/icon": "3.0.50",
+    "@spectrum-css/page": "5.0.31",
+    "@spectrum-css/tokens": "11.0.2",
+    "@spectrum-css/typography": "5.0.29",
+    "@spectrum-css/vars": "9.0.8",
+    "langchain": "0.0.119",
+    "openai": "^3.3.0",
+    "pino": "8.15.0",
+    "pino-pretty": "10.2.0"
+  }
 }

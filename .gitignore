@@ -23,8 +23,7 @@ build
 !.env.example
 
 # ESLint
-apps/*/.eslintcache
-packages/*/.eslintcache
+**/.eslintcache
 
 # Vite
 vite.config.js.timestamp-*

@@ -1,9 +1,9 @@
 <script lang="ts">
-	export let label = 'Button';
-	export let primary = false;
-	export let type: 'button' | 'submit' = 'button';
+  export let label = 'Button';
+  export let primary = false;
+  export let type: 'button' | 'submit' = 'button';
 </script>
 
 <button {type} class:spectrum-Button--primary={primary}>
-	<span>{label}</span>
+  <span>{label}</span>
 </button>
