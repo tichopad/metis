@@ -1,7 +1,7 @@
 import { DATABASE_AUTH_TOKEN, DATABASE_URL } from '$env/static/private';
 import { Kysely } from 'kysely';
-import type { DB } from 'kysely-codegen';
 import { createDialect } from './dialect';
+import type { DB } from './schema';
 
 /**
  * A database client instance.

@@ -16,9 +16,16 @@
     // TODO: Validate form data
     const promptMessage = String(formData.get('prompt'));
     formElement.reset();
-    data.conversation.messages = [
-      ...data.conversation.messages,
-      { role: 'user', content: promptMessage },
+    data.messages = [
+      ...data.messages,
+      {
+        author: 'user',
+        content: promptMessage,
+        conversation_id: data.conversation.id,
+        id: 'NEW',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
     ];
     isLoadingNewMessage = true;
     return async ({ update }) => {
@@ -37,10 +44,10 @@
 
 <main>
   <h1>Group {data.group.name} Conversation {data.conversation.name}</h1>
-  {#if !data?.conversation.messages.length}
+  {#if !data?.messages.length}
     <p>Ask something.</p>
   {:else}
-    {#each data.conversation.messages as message}
+    {#each data.messages as message}
       <p>{message.content}</p>
     {/each}
   {/if}
@@ -73,11 +80,7 @@
     justify-content: center;
     align-items: center;
     gap: 30px;
-    background: linear-gradient(
-      to bottom,
-      transparent,
-      var(--spectrum-alias-background-color-default) 65%
-    );
+    background: linear-gradient(to bottom, transparent, gray 65%);
   }
 
   .textfield {

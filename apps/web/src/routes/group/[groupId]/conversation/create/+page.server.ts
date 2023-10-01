@@ -23,11 +23,11 @@ export const actions: Actions = {
 
     logger.debug('Form values: %O', { name, description });
 
-    const conversation = await groupRepository.putConversation(params.groupId, {
-      id: Math.random().toString(36).substring(7),
-      groupId: params.groupId,
+    const conversation = await groupRepository.putConversation({
+      group_id: params.groupId,
       name,
-      messages: [],
+      description,
+      user_id: '1-abc',
     });
 
     return { conversation };

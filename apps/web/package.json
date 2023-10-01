@@ -10,7 +10,7 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "db:migrate": "tsx ./scripts/database/migrate.ts",
-    "db:codegen": "kysely-codegen --dialect sqlite",
+    "db:codegen": "kysely-codegen --dialect sqlite --out-file src/lib/server/database/schema.generated.ts",
     "test": "vitest run",
     "lint": "eslint --fix --cache .",
     "format": "prettier --cache --plugin-search-dir . --write .",

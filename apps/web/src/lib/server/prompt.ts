@@ -8,6 +8,14 @@ const openai = new OpenAI({
 });
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const fakeResponse = async () => {
+  await delay(2000);
+  return {
+    role: 'assistant' as const,
+    content: 'Lorem ipsum dolor sit amet consectetuer alipiscit elit.',
+  };
+};
 
 export async function getChatCompletion(
   messages: OpenAI.Chat.Completions.ChatCompletionMessage[],
@@ -15,9 +23,7 @@ export async function getChatCompletion(
   logger.trace('Started getChatCompletion');
   logger.debug(messages, 'getChatCompletion input messages');
 
-  await delay(2000);
-
-  return { role: 'assistant', content: 'Lorem ipsum dolor sit amet consectetuer alipiscit elit.' };
+  // return fakeResponse();
 
   logger.trace('Created OpenAI API instance. Sending request for chat completion.');
 

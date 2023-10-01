@@ -13,10 +13,9 @@ export const actions: Actions = {
     logger.debug('Form values: %O', { name, systemPrompt });
 
     const group = await groupRepository.put({
-      id: Math.random().toString(36).substring(7),
       name,
-      systemPrompt,
-      conversations: [],
+      user_id: '1-abc',
+      system_prompt: systemPrompt,
     });
 
     logger.info(`Created group ${group.id}`);
