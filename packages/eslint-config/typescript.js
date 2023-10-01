@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path');
 
 /** @type {import("eslint/lib/shared/types").ConfigData} */
 module.exports = {
@@ -27,10 +27,11 @@ module.exports = {
         disallowTypeAnnotations: true,
         fixStyle: 'inline-type-imports',
         prefer: 'type-imports',
-      }
+      },
     ],
     // Sometimes "any" is useful
     '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
       {
@@ -40,4 +41,4 @@ module.exports = {
       },
     ],
   },
-}
+};

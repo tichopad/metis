@@ -9,19 +9,34 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "db:migrate": "tsx ./scripts/database/migrate.ts",
+    "db:codegen": "kysely-codegen --dialect sqlite",
     "test": "vitest run",
     "lint": "eslint --fix --cache .",
-    "format": "prettier --cache --plugin-search-dir . --write ."
+    "format": "prettier --cache --plugin-search-dir . --write .",
+    "sync": "svelte-kit sync"
+  },
+  "dependencies": {
+    "@libsql/kysely-libsql": "0.3.0",
+    "better-sqlite3": "8.6.0",
+    "kysely": "0.26.3",
+    "openai": "4.10.0",
+    "pino": "8.15.1",
+    "pino-pretty": "10.2.0",
+    "zod": "3.22.2"
   },
   "devDependencies": {
     "@metis/eslint-config": "workspace:*",
     "@sveltejs/adapter-auto": "2.1.0",
     "@sveltejs/kit": "1.22.3",
+    "@types/better-sqlite3": "7.6.5",
     "eslint": "8.45.0",
+    "kysely-codegen": "0.10.1",
     "prettier-plugin-svelte": "2.10.1",
     "svelte": "4.0.5",
     "svelte-check": "3.4.6",
     "tslib": "2.6.0",
+    "tsx": "3.13.0",
     "typescript": "5.1.6",
     "vite": "4.4.4",
     "vitest": "0.33.0"
@@ -34,12 +49,5 @@
       "/.svelte-kit",
       "package"
     ]
-  },
-  "dependencies": {
-    "@libsql/kysely-libsql": "0.3.0",
-    "kysely": "0.26.3",
-    "openai": "4.10.0",
-    "pino": "8.15.1",
-    "pino-pretty": "10.2.0"
   }
 }

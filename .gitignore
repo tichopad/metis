@@ -28,3 +28,6 @@ build
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Dev/test local database file
+.local.db
