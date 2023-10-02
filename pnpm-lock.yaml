@@ -69,6 +69,9 @@ importers:
       svelte-check:
         specifier: 3.4.6
         version: 3.4.6(svelte@4.0.5)
+      ts-essentials:
+        specifier: 9.4.0
+        version: 9.4.0(typescript@5.1.6)
       tslib:
         specifier: 2.6.0
         version: 2.6.0
@@ -2827,6 +2830,17 @@ packages:
     dependencies:
       typescript: 5.1.6
     dev: false
+
+  /ts-essentials@9.4.0(typescript@5.1.6):
+    resolution: {integrity: sha512-s4BzWZmTh926caZO7XF7MMbwCn1BioT3s3r9hT8ARnwW//30OD0XioEsMyq3ORAHP/deN4Zkst2ZvxXmL+tG6g==}
+    peerDependencies:
+      typescript: '>=4.1.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 5.1.6
+    dev: true
 
   /tslib@2.6.0:
     resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}

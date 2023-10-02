@@ -1,13 +1,9 @@
 import db from '$lib/server/database/client';
-import type {
-  Conversation as DBConversation,
-  Group as DBGroup,
-  Message as DBMessage,
-} from '$lib/server/database/schema';
+import type { Group } from '$lib/server/database/schema';
 import logger from '$lib/server/logger';
-import { error } from '@sveltejs/kit';
 import type { Insertable, Updateable } from 'kysely';
 import { performance } from 'perf_hooks';
+import type { MarkRequired } from 'ts-essentials';
 
 // TODO: remove this
 const user = await db.selectFrom('user').select('id').where('id', '=', '1-abc').execute();
@@ -25,23 +21,49 @@ if (user.length === 0) {
 
 type ID = string;
 
+export async function getGroupDetails(id: ID) {
+  const groupDetails = await db
+    .selectFrom('group')
+    .selectAll()
+    .where('id', '=', id)
+    .executeTakeFirst();
+
+  return groupDetails;
+}
+
+export async function createGroup(data: Insertable<Group>) {
+  const insertedGroup = await db
+    .insertInto('group')
+    .values(data)
+    .returningAll()
+    .executeTakeFirstOrThrow();
+
+  return insertedGroup;
+}
+
+type UpdateableGroupWithId = MarkRequired<Updateable<Group>, 'id'>;
+export async function updateGroup(data: UpdateableGroupWithId) {
+  const updatedGroup = await db
+    .updateTable('group')
+    .set(data)
+    .where('id', '=', data.id)
+    .returningAll()
+    .executeTakeFirstOrThrow();
+
+  return updatedGroup;
+}
+
+export async function deleteGroup(id: ID) {
+  const deletedGroup = await db
+    .deleteFrom('group')
+    .where('id', '=', id)
+    .returningAll()
+    .executeTakeFirstOrThrow();
+
+  return deletedGroup;
+}
+
 export class GroupRepository {
-  async get(id: ID) {
-    logger.debug(`Getting group ${id}`);
-    const dbStart = performance.now();
-
-    const group = await db.selectFrom('group').selectAll().where('id', '=', id).executeTakeFirst();
-
-    const dbEnd = performance.now();
-    logger.debug('Get group result (took %dms): %O', Math.floor(dbEnd - dbStart), group);
-
-    if (group === undefined) {
-      throw error(404, `Group ${id} not found`);
-    }
-
-    return group;
-  }
-
   async list() {
     logger.debug(`Listing groups`);
     const dbStart = performance.now();
@@ -116,129 +138,6 @@ export class GroupRepository {
     );
 
     return groupsWithConversations;
-  }
-
-  async update(id: ID, group: Updateable<DBGroup>) {
-    logger.debug(`Updating group ${id}`);
-    const insertStart = performance.now();
-
-    const result = await db
-      .updateTable('group')
-      .set(group)
-      .where('id', '=', id)
-      .returningAll()
-      .executeTakeFirstOrThrow();
-
-    const insertEnd = performance.now();
-    logger.debug('Update result (took %dms): %O', Math.floor(insertEnd - insertStart), result);
-
-    return result;
-  }
-
-  async put(data: Insertable<Omit<DBGroup, 'id'>>) {
-    const id = Math.random().toString(36).substring(7);
-
-    logger.debug(`Putting group ${id}`);
-    const insertStart = performance.now();
-
-    const group = await db
-      .insertInto('group')
-      .values({
-        id,
-        ...data,
-      })
-      .returningAll()
-      .executeTakeFirstOrThrow();
-
-    const insertEnd = performance.now();
-    logger.debug('Insert result (took %dms) %O', Math.floor(insertEnd - insertStart), group);
-
-    return group;
-  }
-
-  async getConversation(conversationId: ID) {
-    logger.debug(`Getting conversation ${conversationId}`);
-    const dbStart = performance.now();
-
-    const conversation = await db
-      .selectFrom('conversation')
-      .selectAll()
-      .where('id', '=', conversationId)
-      .executeTakeFirst();
-
-    const dbEnd = performance.now();
-    logger.debug(
-      'Get conversation result (took %dms): %O',
-      Math.floor(dbEnd - dbStart),
-      conversation,
-    );
-
-    if (conversation === undefined) {
-      throw error(404, `Conversation ${conversationId} not found`);
-    }
-
-    return conversation;
-  }
-
-  async listMessages(conversationId: ID) {
-    logger.debug(`Listing messages for conversation ${conversationId}`);
-    const dbStart = performance.now();
-
-    const messages = await db
-      .selectFrom('message')
-      .selectAll()
-      .where('conversation_id', '=', conversationId)
-      .orderBy('created_at', 'asc')
-      .execute();
-
-    const dbEnd = performance.now();
-    logger.debug('List messages result (took %dms): %O', Math.floor(dbEnd - dbStart), messages);
-
-    return messages;
-  }
-
-  async putMessage(data: Insertable<Omit<DBMessage, 'id'>>) {
-    const id = Math.random().toString(36).substring(7);
-
-    logger.debug(`Putting new message to conversation ${data.conversation_id}`);
-    const insertStart = performance.now();
-
-    const insertedMessage = await db
-      .insertInto('message')
-      .values({ id, ...data })
-      .returningAll()
-      .executeTakeFirstOrThrow();
-
-    const insertEnd = performance.now();
-    logger.debug(
-      'Insert message result (took %dms): %O',
-      Math.floor(insertEnd - insertStart),
-      insertedMessage,
-    );
-
-    return insertedMessage;
-  }
-
-  async putConversation(data: Omit<Insertable<DBConversation>, 'id'>) {
-    const id = Math.random().toString(36).substring(7);
-
-    logger.debug(`Putting conversation ${id}`);
-    const insertStart = performance.now();
-
-    const insertedConversation = await db
-      .insertInto('conversation')
-      .values({ id, ...data })
-      .returningAll()
-      .executeTakeFirstOrThrow();
-
-    const insertEnd = performance.now();
-    logger.debug(
-      'Insert conversation result (took %dms): %O',
-      Math.floor(insertEnd - insertStart),
-      insertedConversation,
-    );
-
-    return insertedConversation;
   }
 }
 

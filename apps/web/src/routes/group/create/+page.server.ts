@@ -1,5 +1,6 @@
+import { createId } from '$lib/helpers/id';
 import logger from '$lib/server/logger';
-import groupRepository from '$lib/server/repositories/group';
+import { createGroup } from '$lib/server/repositories/group';
 import type { Actions } from './$types';
 
 export const actions: Actions = {
@@ -12,7 +13,8 @@ export const actions: Actions = {
 
     logger.debug('Form values: %O', { name, systemPrompt });
 
-    const group = await groupRepository.put({
+    const group = await createGroup({
+      id: createId(),
       name,
       user_id: '1-abc',
       system_prompt: systemPrompt,

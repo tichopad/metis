@@ -26,7 +26,7 @@ export interface Message {
   id: string;
   conversation_id: string;
   content: string;
-  author: 'user' | 'bot' | 'system';
+  author: 'system' | 'user' | 'assistant' | 'function';
   created_at: ColumnType<ISO8601, ISO8601 | undefined, never>;
   updated_at: ColumnType<ISO8601, ISO8601 | undefined, string | undefined>;
 }

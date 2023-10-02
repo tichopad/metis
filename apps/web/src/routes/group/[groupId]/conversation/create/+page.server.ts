@@ -1,14 +1,22 @@
+import { createId } from '$lib/helpers/id';
 import logger from '$lib/server/logger';
-import type { Actions } from './$types';
-import groupRepository from '$lib/server/repositories/group';
+import { createConversation } from '$lib/server/repositories/conversation';
+import { getGroupDetails } from '$lib/server/repositories/group';
 import { error, type Load } from '@sveltejs/kit';
+import type { Actions } from './$types';
 
 export const load: Load = async ({ params }) => {
   logger.debug(`Loading group ${params.groupId}`);
+
   if (params.groupId === undefined) {
     throw error(404, `Group ID is undefined`);
   }
-  const group = await groupRepository.get(params.groupId);
+
+  const group = await getGroupDetails(params.groupId);
+
+  if (!group) {
+    throw error(404, `Group ${params.groupId} not found`);
+  }
 
   return { group };
 };
@@ -23,11 +31,13 @@ export const actions: Actions = {
 
     logger.debug('Form values: %O', { name, description });
 
-    const conversation = await groupRepository.putConversation({
+    const conversation = await createConversation({
+      id: createId(),
       group_id: params.groupId,
       name,
       description,
       user_id: '1-abc',
+      system_prompt: '',
     });
 
     return { conversation };
