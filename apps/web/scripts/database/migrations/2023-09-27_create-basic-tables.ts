@@ -40,9 +40,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('id', 'text', (col) => col.primaryKey().notNull())
     .addColumn('conversation_id', 'text', (col) => col.notNull().references('conversation.id'))
     .addColumn('content', 'text', (col) => col.notNull())
-    .addColumn('author', 'text', (col) =>
-      col.notNull().check(sql`author IN ('user', 'bot', 'system')`),
-    )
+    .addColumn('author', 'text', (col) => col.notNull())
     .addColumn('created_at', 'text', (col) => col.defaultTo(isoNow).notNull())
     .addColumn('updated_at', 'text', (col) => col.defaultTo(isoNow).notNull())
     .execute();
