@@ -1,5 +1,5 @@
 import db from '$lib/server/database/client';
-import type { Message } from '$lib/server/database/schema';
+import type { MessageTable } from '$lib/server/database/schema';
 import type { Insertable } from 'kysely';
 
 type ID = string;
@@ -15,7 +15,7 @@ export async function listMessages(conversationId: ID) {
   return messages;
 }
 
-export async function createMessage(data: Insertable<Message>) {
+export async function createMessage(data: Insertable<MessageTable>) {
   const insertedMessage = await db
     .insertInto('message')
     .values(data)

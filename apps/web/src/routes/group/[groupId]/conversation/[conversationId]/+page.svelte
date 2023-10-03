@@ -43,7 +43,7 @@
 </script>
 
 <main>
-  <h1>Group {data.group.name} Conversation {data.conversation.name}</h1>
+  <h1>Group {data.group?.name ?? 'No group'} Conversation {data.conversation.name}</h1>
   {#if !data?.messages.length}
     <p>Ask something.</p>
   {:else}

@@ -1,6 +1,10 @@
 import db from '$lib/server/database/client';
-import type { Conversation } from '$lib/server/database/schema';
-import type { Insertable, Updateable } from 'kysely';
+import type {
+  Conversation,
+  ConversationUpdate,
+  Group,
+  NewConversation,
+} from '$lib/server/database/schema';
 import type { MarkRequired } from 'ts-essentials';
 
 type ID = string;
@@ -15,7 +19,7 @@ export async function getConversationDetails(id: ID) {
   return conversationDetails;
 }
 
-export async function createConversation(data: Insertable<Conversation>) {
+export async function createConversation(data: NewConversation) {
   const insertedConversation = await db
     .insertInto('conversation')
     .values(data)
@@ -25,8 +29,7 @@ export async function createConversation(data: Insertable<Conversation>) {
   return insertedConversation;
 }
 
-type UpdateableConversationWithId = MarkRequired<Updateable<Conversation>, 'id'>;
-export async function updateConversation(data: UpdateableConversationWithId) {
+export async function updateConversation(data: MarkRequired<ConversationUpdate, 'id'>) {
   const updatedConversation = await db
     .updateTable('conversation')
     .set(data)
@@ -47,7 +50,20 @@ export async function deleteConversation(id: ID) {
   return deletedConversation;
 }
 
-export async function listConversationsWithGroups(userId: ID) {
+type ListConversationGroupRow = {
+  conversation_created_at: Conversation['created_at'] | null;
+  conversation_id: Conversation['id'] | null;
+  conversation_name: Conversation['name'] | null;
+  group_created_at: Group['created_at'] | null;
+  group_id: Group['id'] | null;
+  group_name: Group['name'] | null;
+};
+type GroupedConversations = {
+  withoutGroup: ListConversationGroupRow[];
+  withGroup: Array<[ID, ListConversationGroupRow[]]>;
+};
+export async function listConversationsWithGroups(userId: ID): Promise<GroupedConversations> {
+  // TODO: fix query, it won't select groups without conversations
   const conversationsWithGroups = await db
     .selectFrom('conversation')
     .fullJoin('group', 'group.id', 'conversation.group_id')
@@ -59,18 +75,25 @@ export async function listConversationsWithGroups(userId: ID) {
       'group.id as group_id',
       'group.name as group_name',
     ])
+    .where('conversation.user_id', '=', userId)
     .execute();
-  console.log('conversationsWithGroups', conversationsWithGroups);
+  console.log(JSON.stringify({ conversationsWithGroups }, null, 2));
 
-  // Group rows by group id, if row's group id is null, it goes into a "groupless" group
-  const groupedConversations = conversationsWithGroups.reduce((acc, row) => {
-    const groupId = row.group_id ?? 'groupless';
-    const group = acc[groupId] ?? [];
-    return {
-      ...acc,
-      [groupId]: [...group, row],
-    };
-  }, {} as Record<string, typeof conversationsWithGroups>);
+  const withGroupMap = new Map<ID, ListConversationGroupRow[]>();
+  const withoutGroup: ListConversationGroupRow[] = [];
 
-  return groupedConversations;
+  for (const row of conversationsWithGroups) {
+    if (row.group_id === null) {
+      withoutGroup.push(row);
+    } else {
+      const groupConversations = withGroupMap.get(row.group_id) ?? [];
+      groupConversations.push(row);
+      withGroupMap.set(row.group_id, groupConversations);
+    }
+  }
+
+  return {
+    withoutGroup,
+    withGroup: Array.from(withGroupMap),
+  };
 }

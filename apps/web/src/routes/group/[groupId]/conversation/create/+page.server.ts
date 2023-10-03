@@ -37,7 +37,7 @@ export const actions: Actions = {
       name,
       description,
       user_id: '1-abc',
-      system_prompt: '',
+      system_prompt: null,
     });
 
     return { conversation };

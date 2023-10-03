@@ -19,8 +19,6 @@ export const load: Load = async ({ params }) => {
   ]);
 
   if (!conversation) throw error(404, `Conversation ${params.conversationId} not found`);
-  if (!group) throw error(404, `Group ${params.groupId} not found`);
-  if (!messages) throw error(404, `Messages for conversation ${params.conversationId} not found`);
 
   return { conversation, group, messages };
 };

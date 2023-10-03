@@ -5,18 +5,36 @@
 <div class="layout-wrapper">
   <nav class="sidebar">
     <h2><a href="/">Home</a></h2>
-    <ul class="list list--groups">
-      {#each data.groups as group (group.id)}
-        <li><a href={`/group/${group.id}`}>{group.name}</a></li>
+    {#if data.conversationsList.withoutGroup.length > 0}
+      <ul class="list list--groups">
+        <li><em>No group</em></li>
         <ul class="list list--conversations">
-          {#each group.conversations as conversation (conversation.id)}
+          {#each data.conversationsList.withoutGroup as { conversation_id, conversation_name } (conversation_id)}
             <li>
-              <a href={`/group/${group.id}/conversation/${conversation.id}`}>{conversation.name}</a>
+              <a href={`/group/-/conversation/${conversation_id}`}>{conversation_name}</a>
             </li>
           {/each}
         </ul>
-      {/each}
-    </ul>
+      </ul>
+    {/if}
+    {#if data.conversationsList.withGroup.length > 0}
+      <ul class="list list--groups">
+        {#each data.conversationsList.withGroup as [groupId, conversations] (groupId)}
+          <li><a href={`/group/${groupId}`}>{conversations[0]?.group_name}</a></li>
+          {#if conversations.length > 0}
+            <ul class="list list--conversations">
+              {#each conversations as { conversation_id, conversation_name } (conversation_id)}
+                <li>
+                  <a href={`/group/${groupId}/conversation/${conversation_id}`}
+                    >{conversation_name}</a
+                  >
+                </li>
+              {/each}
+            </ul>
+          {/if}
+        {/each}
+      </ul>
+    {/if}
   </nav>
   <section class="page-content">
     <slot />
