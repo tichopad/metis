@@ -9,9 +9,9 @@
       <ul class="list list--groups">
         <li><em>No group</em></li>
         <ul class="list list--conversations">
-          {#each data.conversationsList.withoutGroup as { conversation_id, conversation_name } (conversation_id)}
+          {#each data.conversationsList.withoutGroup as conversation (conversation.id)}
             <li>
-              <a href={`/group/-/conversation/${conversation_id}`}>{conversation_name}</a>
+              <a href={`/group/-/conversation/${conversation.id}`}>{conversation.name}</a>
             </li>
           {/each}
         </ul>
@@ -19,11 +19,11 @@
     {/if}
     {#if data.conversationsList.withGroup.length > 0}
       <ul class="list list--groups">
-        {#each data.conversationsList.withGroup as [groupId, conversations] (groupId)}
-          <li><a href={`/group/${groupId}`}>{conversations[0]?.group_name}</a></li>
-          {#if conversations.length > 0}
+        {#each data.conversationsList.withGroup as [groupId, rows] (groupId)}
+          <li><a href={`/group/${groupId}`}>{rows[0]?.group_name}</a></li>
+          {#if rows[0]?.conversation_id !== null}
             <ul class="list list--conversations">
-              {#each conversations as { conversation_id, conversation_name } (conversation_id)}
+              {#each rows as { conversation_id, conversation_name } (conversation_id)}
                 <li>
                   <a href={`/group/${groupId}/conversation/${conversation_id}`}
                     >{conversation_name}</a

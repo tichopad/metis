@@ -19,6 +19,11 @@ export async function createDialect(dbUrl: string, authToken?: string): Promise<
     });
   }
 
+  // import.meta.env is only available in Vite
+  if (import.meta.env?.DEV === false) {
+    throw new Error('Local file database is only supported in development mode');
+  }
+
   const { default: LocalDatabase } = await import('better-sqlite3');
   const { SqliteDialect } = await import('kysely');
   return new SqliteDialect({

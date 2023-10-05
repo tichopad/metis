@@ -1,9 +1,8 @@
-import { OPENAI_API_KEY, OPENAI_ORG } from '$env/static/private';
+import { OPENAI_API_KEY } from '$env/static/private';
 import logger from '$lib/server/logger';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-  organization: OPENAI_ORG,
   apiKey: OPENAI_API_KEY,
 });
 
