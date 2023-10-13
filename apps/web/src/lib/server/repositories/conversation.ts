@@ -6,7 +6,7 @@ import {
 } from '$lib/helpers/types';
 import db from '$lib/server/database/client';
 import type { ConversationUpdate, NewConversation } from '$lib/server/database/schema';
-import type { MarkRequired } from 'ts-essentials';
+import type { ElementOf, MarkRequired } from 'ts-essentials';
 
 type ID = string;
 
@@ -64,8 +64,8 @@ export async function listConversationsWithGroups(userId: ID) {
     .where('user_id', '=', userId)
     .execute();
 
-  type ConversationRow = (typeof allConversations)[number];
-  type GroupRow = (typeof allGroups)[number];
+  type ConversationRow = ElementOf<typeof allConversations>;
+  type GroupRow = ElementOf<typeof allGroups>;
   type WithoutGroup = SetPropsToNull<ConversationRow, 'group_id'>;
   type WithGroup = RemoveNullFromProps<ConversationRow, 'group_id'>;
   type GroupWithConversations = GroupRow & { conversations: WithGroup[] };
