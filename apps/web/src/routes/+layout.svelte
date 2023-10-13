@@ -5,9 +5,15 @@
 <div class="layout-wrapper">
   <nav class="sidebar">
     <h2><a href="/">Home</a></h2>
+    <div class="sidebar__toolbar">
+      <a href="/group/create">Create group</a>
+    </div>
     {#if data.conversationsList.withoutGroup.length > 0}
       <ul class="list list--groups">
-        <li><em>No group</em></li>
+        <li class="list__title">
+          <em>Draft</em>
+          <a href={'/group/-/conversation/create'}>+</a>
+        </li>
         <ul class="list list--conversations">
           {#each data.conversationsList.withoutGroup as conversation (conversation.id)}
             <li>
@@ -20,7 +26,11 @@
     {#if data.conversationsList.withGroup.size > 0}
       <ul class="list list--groups">
         {#each data.conversationsList.withGroup as [id, group] (id)}
-          <li><a href={`/group/${id}`}>{group.name}</a></li>
+          <li class="list__title">
+            <a href={`/group/${id}`}>{group.name}</a><a
+              href={`/group/${group.id}/conversation/create`}>+</a
+            >
+          </li>
           {#if group.conversations.length > 0}
             <ul class="list list--conversations">
               {#each group.conversations as conversation (conversation.id)}
@@ -71,6 +81,10 @@
     }
   }
 
+  .sidebar__toolbar {
+    margin-bottom: 20px;
+  }
+
   .list {
     list-style: none;
     margin: 0;
@@ -91,5 +105,11 @@
 
   .list--conversations {
     margin-left: 2rem;
+  }
+
+  .list__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 </style>
