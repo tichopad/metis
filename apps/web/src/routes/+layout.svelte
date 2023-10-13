@@ -17,17 +17,15 @@
         </ul>
       </ul>
     {/if}
-    {#if data.conversationsList.withGroup.length > 0}
+    {#if data.conversationsList.withGroup.size > 0}
       <ul class="list list--groups">
-        {#each data.conversationsList.withGroup as [groupId, rows] (groupId)}
-          <li><a href={`/group/${groupId}`}>{rows[0]?.group_name}</a></li>
-          {#if rows[0]?.conversation_id !== null}
+        {#each data.conversationsList.withGroup as [id, group] (id)}
+          <li><a href={`/group/${id}`}>{group.name}</a></li>
+          {#if group.conversations.length > 0}
             <ul class="list list--conversations">
-              {#each rows as { conversation_id, conversation_name } (conversation_id)}
+              {#each group.conversations as conversation (conversation.id)}
                 <li>
-                  <a href={`/group/${groupId}/conversation/${conversation_id}`}
-                    >{conversation_name}</a
-                  >
+                  <a href={`/group/${id}/conversation/${conversation.id}`}>{conversation.name}</a>
                 </li>
               {/each}
             </ul>

@@ -1,3 +1,9 @@
+import {
+  isPropNotNull,
+  isPropNull,
+  type RemoveNullFromProps,
+  type SetPropsToNull,
+} from '$lib/helpers/types';
 import db from '$lib/server/database/client';
 import type { ConversationUpdate, NewConversation } from '$lib/server/database/schema';
 import type { MarkRequired } from 'ts-essentials';
@@ -46,36 +52,45 @@ export async function deleteConversation(id: ID) {
 }
 
 export async function listConversationsWithGroups(userId: ID) {
-  const groupsWithConversations = await db
+  const allGroups = await db
     .selectFrom('group')
-    .leftJoin('conversation', 'group.id', 'conversation.group_id')
-    .select([
-      'conversation.created_at as conversation_created_at',
-      'conversation.id as conversation_id',
-      'conversation.name as conversation_name',
-      'group.created_at as group_created_at',
-      'group.id as group_id',
-      'group.name as group_name',
-    ])
-    .where('group.user_id', '=', userId)
-    .execute();
-
-  const withoutGroup = await db
-    .selectFrom('conversation')
     .select(['id', 'name', 'created_at'])
-    .where('group_id', 'is', null)
+    .where('user_id', '=', userId)
     .execute();
 
-  const withGroupMap = new Map<ID, typeof groupsWithConversations>();
+  const allConversations = await db
+    .selectFrom('conversation')
+    .select(['id', 'name', 'created_at', 'group_id'])
+    .where('user_id', '=', userId)
+    .execute();
 
-  for (const row of groupsWithConversations) {
-    const groupConversations = withGroupMap.get(row.group_id) ?? [];
-    groupConversations.push(row);
-    withGroupMap.set(row.group_id, groupConversations);
+  type ConversationRow = (typeof allConversations)[number];
+  type GroupRow = (typeof allGroups)[number];
+  type WithoutGroup = SetPropsToNull<ConversationRow, 'group_id'>;
+  type WithGroup = RemoveNullFromProps<ConversationRow, 'group_id'>;
+  type GroupWithConversations = GroupRow & { conversations: WithGroup[] };
+
+  const withoutGroup: WithoutGroup[] = [];
+  const withGroup = new Map<ID, GroupWithConversations>();
+
+  for (const group of allGroups) {
+    withGroup.set(group.id, { ...group, conversations: [] });
+  }
+
+  for (const conversation of allConversations) {
+    if (isPropNull(conversation, 'group_id')) {
+      withoutGroup.push(conversation);
+      continue;
+    }
+    if (isPropNotNull(conversation, 'group_id')) {
+      const group = withGroup.get(conversation.group_id);
+      if (group) group.conversations.push(conversation);
+      continue;
+    }
   }
 
   return {
     withoutGroup,
-    withGroup: Array.from(withGroupMap),
+    withGroup,
   };
 }

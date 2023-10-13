@@ -9,4 +9,6 @@ declare global {
   }
 }
 
+import '@total-typescript/ts-reset';
+
 export {};
