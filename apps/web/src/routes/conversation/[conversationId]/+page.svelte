@@ -16,6 +16,7 @@
     // TODO: Validate form data
     const promptMessage = String(formData.get('prompt'));
     formElement.reset();
+    isLoadingNewMessage = true;
     data.messages = [
       ...data.messages,
       {
@@ -27,7 +28,6 @@
         updated_at: new Date().toISOString(),
       },
     ];
-    isLoadingNewMessage = true;
     return async ({ update }) => {
       await update();
       isLoadingNewMessage = false;

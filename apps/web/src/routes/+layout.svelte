@@ -12,12 +12,12 @@
       <ul class="list list--groups">
         <li class="list__title">
           <em>Draft</em>
-          <a href={'/group/-/conversation/create'}>+</a>
+          <a href="/group/-/conversation/create">+</a>
         </li>
         <ul class="list list--conversations">
           {#each data.conversationsList.withoutGroup as conversation (conversation.id)}
             <li>
-              <a href={`/group/-/conversation/${conversation.id}`}>{conversation.name}</a>
+              <a href={`/conversation/${conversation.id}`}>{conversation.name}</a>
             </li>
           {/each}
         </ul>
@@ -35,7 +35,7 @@
             <ul class="list list--conversations">
               {#each group.conversations as conversation (conversation.id)}
                 <li>
-                  <a href={`/group/${id}/conversation/${conversation.id}`}>{conversation.name}</a>
+                  <a href={`/conversation/${conversation.id}`}>{conversation.name}</a>
                 </li>
               {/each}
             </ul>

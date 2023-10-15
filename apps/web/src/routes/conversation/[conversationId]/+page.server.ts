@@ -6,19 +6,23 @@ import { createMessage, listMessages } from '$lib/server/repositories/message';
 import { error, type Load } from '@sveltejs/kit';
 import type { ChatCompletionMessage } from 'openai/resources/chat';
 import type { Actions } from './$types';
+import type { Group } from '$lib/server/database/schema';
 
 export const load: Load = async ({ params }) => {
   if (!params.conversationId) throw error(404, `Conversation ID is undefined`);
-  if (!params.groupId) throw error(404, `Group ID is undefined`);
 
   // TODO: group can be joined to conversation instead of fetching both separately
-  const [conversation, group, messages] = await Promise.all([
+  const [conversation, messages] = await Promise.all([
     getConversationDetails(params.conversationId),
-    getGroupDetails(params.groupId),
     listMessages(params.conversationId),
   ]);
 
   if (!conversation) throw error(404, `Conversation ${params.conversationId} not found`);
+
+  let group: Group | undefined;
+  if (conversation.group_id !== null) {
+    group = await getGroupDetails(conversation.group_id);
+  }
 
   return { conversation, group, messages };
 };
@@ -42,11 +46,9 @@ export const actions: Actions = {
 
     let systemPrompt = conversation.system_prompt;
 
-    if (systemPrompt === null) {
-      const group = await getGroupDetails(params.groupId);
-      if (group) {
-        systemPrompt = group.system_prompt;
-      }
+    if (systemPrompt === null && conversation.group_id !== null) {
+      const group = await getGroupDetails(conversation.group_id);
+      if (group) systemPrompt = group.system_prompt;
     }
 
     const userInsertedMessage = await createMessage({
@@ -61,7 +63,10 @@ export const actions: Actions = {
       role: message.author,
       content: message.content,
     }));
-    apiCompatibleMessages.unshift({ role: 'system', content: systemPrompt });
+
+    if (systemPrompt !== null) {
+      apiCompatibleMessages.unshift({ role: 'system', content: systemPrompt });
+    }
 
     const response = await getChatCompletion(apiCompatibleMessages);
 
