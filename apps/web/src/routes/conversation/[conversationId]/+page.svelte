@@ -43,7 +43,11 @@
 </script>
 
 <main>
-  <h1>Group {data.group?.name ?? 'No group'} Conversation {data.conversation.name}</h1>
+  <div>
+    <a href={`/conversation/${data.conversation.id}/edit`}>Edit</a>
+    <a href={`/conversation/${data.conversation.id}/delete`}>Delete</a>
+  </div>
+  <h1><em>({data.group?.name ?? 'No group'})</em> {data.conversation.name}</h1>
   {#if !data?.messages.length}
     <p>Ask something.</p>
   {:else}
@@ -63,6 +67,7 @@
   use:enhance={enhanceForm}
 >
   <div class="textfield">
+    <em>Ctrl+Enter to send</em>
     <Textfield name="prompt" on:keydown={submitFormOnCtrlEnter} />
   </div>
   <Button primary label="Send" type="submit" />
@@ -80,7 +85,7 @@
     justify-content: center;
     align-items: center;
     gap: 30px;
-    background: linear-gradient(to bottom, transparent, gray 65%);
+    /* background: linear-gradient(to bottom, transparent, gray 65%); */
   }
 
   .textfield {
