@@ -1,5 +1,5 @@
 import db from '$lib/server/database/client';
-import type { GroupUpdate, NewGroup } from '$lib/server/database/schema';
+import type { GroupUpdate, NewGroup, User } from '$lib/server/database/schema';
 import type { MarkRequired } from 'ts-essentials';
 
 // TODO: remove this
@@ -17,6 +17,12 @@ if (user.length === 0) {
 }
 
 type ID = string;
+
+export async function listGroups(userId: User['id']) {
+  const groups = await db.selectFrom('group').selectAll().where('user_id', '=', userId).execute();
+
+  return groups;
+}
 
 export async function getGroupDetails(id: ID) {
   const groupDetails = await db
