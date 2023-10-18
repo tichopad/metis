@@ -2,7 +2,7 @@ import type { Group } from '$lib/server/database/schema';
 import logger from '$lib/server/logger';
 import { getConversationDetails, updateConversation } from '$lib/server/repositories/conversation';
 import { getGroupDetails, listGroups } from '$lib/server/repositories/group';
-import { error, type Actions, type Load } from '@sveltejs/kit';
+import { error, type Actions, type Load, redirect } from '@sveltejs/kit';
 
 export const load: Load = async ({ params }) => {
   if (!params.conversationId) throw error(404, `Conversation ID is undefined`);
@@ -53,6 +53,6 @@ export const actions: Actions = {
       group_id: group,
     });
 
-    return { updatedConversation };
+    throw redirect(303, `/conversation/${updatedConversation.id}`);
   },
 };
