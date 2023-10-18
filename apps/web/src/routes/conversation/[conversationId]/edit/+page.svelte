@@ -1,11 +1,23 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import type { SubmitFunction } from '@sveltejs/kit';
 
   export let data;
+
+  let isFormSubmitting = false;
+  $: submitBtnText = isFormSubmitting ? 'Sending...' : 'Save';
+
+  const enhanceForm: SubmitFunction = () => {
+    isFormSubmitting = true;
+    return async ({ update }) => {
+      await update();
+      isFormSubmitting = false;
+    };
+  };
 </script>
 
 <main>
-  <form method="post" use:enhance>
+  <form method="post" use:enhance={enhanceForm}>
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" value={data.conversation.name} required />
     <br />
@@ -39,6 +51,6 @@
       {/each}
     </select>
 
-    <button type="submit">Save</button>
+    <button disabled={isFormSubmitting} type="submit">{submitBtnText}</button>
   </form>
 </main>
