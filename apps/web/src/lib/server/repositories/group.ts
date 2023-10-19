@@ -64,3 +64,10 @@ export async function deleteGroup(id: ID) {
 
   return deletedGroup;
 }
+
+export async function deleteGroupWithConversations(id: ID) {
+  await db.transaction().execute(async (trx) => {
+    await trx.deleteFrom('conversation').where('group_id', '=', id).execute();
+    await trx.deleteFrom('group').where('id', '=', id).execute();
+  });
+}

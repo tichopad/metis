@@ -18,6 +18,14 @@ export const load: Load = async ({ params }) => {
 
   // TODO: handle concurrently
   const allGroups = await listGroups('1-abc');
+  allGroups.unshift({
+    created_at: '1992-02-11T15:00:00.000',
+    id: '-',
+    name: 'Draft',
+    system_prompt: null,
+    updated_at: '1992-02-11T15:00:00.000',
+    user_id: '1-abc',
+  });
 
   return { conversation, group, allGroups };
 };
@@ -50,7 +58,7 @@ export const actions: Actions = {
       name,
       description,
       system_prompt: systemPrompt,
-      group_id: group,
+      group_id: group === '-' ? null : group,
     });
 
     throw redirect(303, `/conversation/${updatedConversation.id}`);
